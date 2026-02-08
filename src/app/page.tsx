@@ -4,12 +4,55 @@ import Link from "next/link";
 import Image from "next/image";
 import HomeSearchBox from "@/components/HomeSearchBox";
 import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function HomePage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Background images for rotation
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
+    "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=1200",
+    "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200",
+    "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1200",
+    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1200",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-neutral-950 text-white overflow-hidden">
       {/* --- HERO SECTION --- */}
       <section className="relative h-screen w-full flex items-center justify-center">
+        {/* Background images */}
+        <div className="absolute inset-0">
+          {backgroundImages.map((image, index) => (
+            <div
+              key={image}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentImageIndex ? "opacity-45" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={image}
+                alt=""
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+
+          {/* Soft cinematic overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
+        </div>
+
         {/* Animated Background Grid */}
         <div className="absolute inset-0 opacity-20">
           <div
@@ -23,8 +66,8 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Floating Images - Scattered Gallery */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Floating Images - Scattered Gallery - HIDDEN ON MOBILE */}
+        <div className="absolute inset-0 pointer-events-none hidden lg:block">
           {/* Top Left */}
           <div className="absolute top-[8%] left-[5%] w-64 h-80 opacity-40 animate-float-slow">
             <div className="relative w-full h-full rotate-[-8deg] shadow-2xl">
@@ -87,15 +130,11 @@ export default function HomePage() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <div className="mb-8 opacity-0 animate-fade-in-up">
-            <div className="inline-block px-4 py-2 border border-white/20 rounded-full text-sm tracking-widest mb-8">
-              CURATED WEDDING MARKETPLACE
-            </div>
-          </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-24">
+          {/* Removed the badge that was interfering with navbar */}
 
           <h1
-            className="text-7xl md:text-8xl lg:text-9xl font-light tracking-tight mb-8 leading-[0.95] opacity-0 animate-fade-in-up-delayed"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight mb-8 leading-[0.95] opacity-0 animate-fade-in-up-delayed"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               animationDelay: "0.2s",
@@ -107,7 +146,7 @@ export default function HomePage() {
           </h1>
 
           <p
-            className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed opacity-0 animate-fade-in-up-delayed"
+            className="text-lg sm:text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed opacity-0 animate-fade-in-up-delayed"
             style={{ animationDelay: "0.4s" }}
           >
             Discover exceptional wedding professionals.
@@ -123,18 +162,18 @@ export default function HomePage() {
           </div>
 
           <div
-            className="flex items-center justify-center gap-12 text-sm text-neutral-500 pt-12 opacity-0 animate-fade-in-up-delayed tracking-wide"
+            className="flex items-center justify-center gap-6 sm:gap-12 text-xs sm:text-sm text-neutral-500 pt-12 opacity-0 animate-fade-in-up-delayed tracking-wide flex-wrap"
             style={{ animationDelay: "0.8s" }}
           >
             <span>VERIFIED VENDORS</span>
-            <span>—</span>
+            <span className="hidden sm:inline">—</span>
             <span>UPFRONT PRICING</span>
           </div>
         </div>
 
         {/* Scroll Indicator */}
         <div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in-delayed"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in-delayed hidden sm:block"
           style={{ animationDelay: "1s" }}
         >
           <div className="w-px h-24 bg-gradient-to-b from-white/50 to-transparent animate-scroll-line" />
@@ -147,12 +186,12 @@ export default function HomePage() {
           <div className="mb-20 flex items-end justify-between">
             <div>
               <h2
-                className="text-6xl md:text-7xl font-light mb-4"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light mb-4"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 Our Services
               </h2>
-              <p className="text-neutral-500 text-lg">
+              <p className="text-neutral-500 text-base sm:text-lg">
                 Excellence in every category
               </p>
             </div>
@@ -185,11 +224,11 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-500" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-end justify-between">
                     <div>
                       <h3
-                        className="text-5xl font-light mb-2"
+                        className="text-3xl sm:text-4xl md:text-5xl font-light mb-2"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Photographers
@@ -220,11 +259,11 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-500" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-end justify-between">
                     <div>
                       <h3
-                        className="text-5xl font-light mb-2"
+                        className="text-3xl sm:text-4xl md:text-5xl font-light mb-2"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Venues
@@ -255,11 +294,11 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-500" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-end justify-between">
                     <div>
                       <h3
-                        className="text-5xl font-light mb-2"
+                        className="text-3xl sm:text-4xl md:text-5xl font-light mb-2"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Makeup & Hair
@@ -290,11 +329,11 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-500" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-end justify-between">
                     <div>
                       <h3
-                        className="text-5xl font-light mb-2"
+                        className="text-3xl sm:text-4xl md:text-5xl font-light mb-2"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Planners
@@ -325,11 +364,11 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-500" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-end justify-between">
                     <div>
                       <h3
-                        className="text-5xl font-light mb-2"
+                        className="text-3xl sm:text-4xl md:text-5xl font-light mb-2"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Videography
@@ -360,22 +399,22 @@ export default function HomePage() {
                   FOR PROFESSIONALS
                 </div>
                 <h2
-                  className="text-6xl md:text-7xl font-light leading-tight mb-6"
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6"
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}
                 >
                   Join Our
                   <br />
                   <span className="italic">Curated Network</span>
                 </h2>
-                <p className="text-xl text-neutral-400 leading-relaxed font-light">
+                <p className="text-lg sm:text-xl text-neutral-400 leading-relaxed font-light">
                   We connect you with couples who value exceptional
                   craftsmanship. No spam. No noise. Just meaningful connections.
                 </p>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button className="px-8 py-4 bg-white text-black font-medium tracking-wide hover:bg-neutral-200 transition-all duration-300 group">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     List Your Business
                     <ArrowUpRight
                       size={18}
@@ -389,7 +428,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="order-1 md:order-2 relative h-[500px] group">
+            <div className="order-1 md:order-2 relative h-[400px] sm:h-[500px] group">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-sm transform rotate-3 group-hover:rotate-0 transition-transform duration-700" />
               <div className="relative h-full overflow-hidden rounded-sm transform -rotate-3 group-hover:rotate-0 transition-transform duration-700">
                 <Image
